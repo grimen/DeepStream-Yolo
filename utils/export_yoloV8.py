@@ -16,6 +16,9 @@ class DeepStreamOutput(nn.Module):
         super().__init__()
 
     def forward(self, x):
+        is_segmentation_model = isinstance(x, tuple)
+        if is_segmentation_model:
+            x = x[0]
         x = x.transpose(1, 2)
         boxes = x[:, :, :4]
         scores, classes = torch.max(x[:, :, 4:], 2, keepdim=True)
